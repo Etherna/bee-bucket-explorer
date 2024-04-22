@@ -26,4 +26,8 @@
         <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Bee.Net" Version="0.2.0-alpha.245" />
+    </ItemGroup>
+
 </Project>
