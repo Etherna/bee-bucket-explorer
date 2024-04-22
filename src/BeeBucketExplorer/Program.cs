@@ -19,12 +19,20 @@ sealed class Program
 
         foreach (var postage in postageBatches)
         {
+            var maxCollisions = (int)Math.Pow(2, postage.Depth - postage.BucketDepth);
             var bucketBatch = await beeClient.GetStampsBucketsForBatchAsync(postage.Id);
 
-            Console.WriteLine($"postage Id: {postage.Id}, depth: {postage.Depth}");
+            Console.WriteLine($"postage Id: {postage.Id}, depth: {postage.Depth}, max collisions: {maxCollisions}");
             
             var maxCollisionsBucket = bucketBatch.Buckets.MaxBy(b => b.Collisions)!;
-            Console.WriteLine($"  max collisions bucket: {maxCollisionsBucket.Collisions}");
+            Console.WriteLine($"  max collisions bucket: {maxCollisionsBucket.BucketId} with {maxCollisionsBucket.Collisions}");
+
+            if (maxCollisionsBucket.Collisions == maxCollisions)
+                Console.WriteLine("  WARNING: batch fulfilled!");
+            else if (maxCollisionsBucket.Collisions > maxCollisions)
+                Console.WriteLine("  ERROR: bucket over collided!!");
+            
+            Console.WriteLine("-----");
         }
     }
 }
